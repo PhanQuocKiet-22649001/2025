@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/jquery-3.7.1.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        $(document).ready(function () { 
+            var i = 1
+
+            $("#btnDK").click(function () {
+                $("#mymodal").modal()
+            })
+
+            // kiem tra ten
+            function kiemTraTen() {
+                var ktTen = /^[A-Z][a-z]*(\s[A-Z][a-z]*)+$/
+                var hoTen = $("#txtten").val()
+
+                if (hoTen === "") {
+                    $("#tbten").html("Vui lòng nhập tên")
+                    $("#tbten").addClass("red")
+                    return false
+                } else if (!ktTen.test(hoTen)) {
+                    $("#tbten").html("Tên tối thiểu 2 từ, viết hoa đầu từ")
+                    $("#tbten").addClass("red")
+                    return false
+                } else {
+                    $("#tbten").html("Hợp lệ")
+                    $("#tbten").removeClass("red")
+                    return true
+                }
+            }
+            $("#txtten").blur(kiemTraTen)
+
+            // kiem tra so dien thoai
+            function kiemTraSDT(){
+                var ktSDT = /^(0)[0-9]{9}$/
+                var sdt = $("#txtsdt").val()
+
+                if(sdt === ""){
+                    $("#tbsdt").html("Vui lòng nhập số điện thoại.")
+                    $("#tbsdt").addClass("red")
+                    return false
+                }else  if(!ktSDT.test(sdt)){
+                    $("#tbsdt").html("Không hợp lệ, có 10 số, bắt đầu bằng số 0.")
+                    $("#tbsdt").addClass("red")
+                    return false
+                }else{
+                    $("#tbsdt").html("Hợp lệ")
+                    $("#tbsdt").removeClass("red")
+                    return true
+                }
+            }  $("#txtsdt").blur(kiemTraSDT)
+
+            // kiem tra ngay sinh
+            function kiemtraNgay(){
+                var ktNgay = new Date($("#txtngay").val())
+                var hienTai = new Date()
+
+                if(ktNgay > hienTai){
+                    $("#tbngay").html("Ngày sinh không hợp lệ")
+                    $("#tbngay").addClass("red")
+                    return false
+                }else{
+                    $("#tbngay").html("Hợp lệ")
+                    $("#tbngay").removeClass("red")
+                    return true
+                }
+            } $("#txtngay").blur(kiemtraNgay)
+
+            //Kiem tra dia chi
+            function kiemTraDiaChi(){
+                var ktDC = /^[A-Za-z0-9\s/.-]+$/
+                var ktDC = /^[A-Za-z0-9\s/.-]+$/;
+
+                var diaChi = $("#txtdiachi").val()
+
+                if(diaChi === ""){
+                    $("#tbdiachi").html("Vui lòng nhập địa chỉ")
+                    $("#tbdiachi").addClass("red")
+                    return false
+                }else if(!ktDC.test(diaChi)){
+                    $("#tbdiachi").html("Địa chỉ không hợp lệ")
+                    $("#tbdiachi").addClass("red")
+                    return false
+                }else{
+                    $("#tbdiachi").html("Hợp lệ")
+                    $("#tbdiachi").removeClass("red")
+                    return true
+                }
+            } 
+            $("#txtdiachi").blur(kiemTraDiaChi)
+
+            // gán học phí
+            $("#khoahoc").change(function(){
+                var hocPhi = $("#khoahoc").val()
+                $("#txthocphi").val(hocPhi)
+            })
+
+            $("#btnSave").click(function (event) {
+
+                if (kiemTraTen()&&kiemTraSDT()&&kiemtraNgay()&&kiemTraDiaChi()) {
+                    var ten = $("#txtten").val()
+                    var gt = $("input[name=gioitinh]:checked").val()
+                    var nn = $("input[name=ngonngu]:checked").map(function(){
+                        return $(this).val()
+                    }).get().join(", ")
+                    var sdt = $("#txtsdt").val()
+                    var ngay = $("#txtngay").val()
+                    var diaChi = $("#txtdiachi").val()
+                    var hocPhi = $("#txthocphi").val()
+                    var khoaHoc = $("#khoahoc option:selected").text()
+
+
+
+                    var them = "<tr><td>" + (i++) + "</td><td>" + ten + "</td><td>" + gt + "</td><td>"+nn+ 
+                       "</td><td>"+sdt+ "</td><td>"+ ngay+ "</td><td>"+diaChi+"</td><td>"+khoaHoc+"</td><td>"+hocPhi+"</td><td>"+"</td></tr>"
+                    $("#danhsach").append(them)
+                    $("#mymodal").modal("hide")
+
+
+                    $("#txtten").val("")
+                    $(".checkgt").prop("checked", false)
+                    $(".checknn").prop("checked", false)
+                    $("#txtsdt").val("")
+                    $("#txtngay").val("")
+                    $("#txtdiachi").val("")
+                    $("#khoahoc").val($("#khoahoc option:first").val())
+                    $("#txthocphi").val("")
+                    $("#tbten").html("")
+                    $("#tbsdt").html("")
+                    $("#tbngay").html("")
+                    $("#tbdiachi").html("")
+                } else {
+                    alert("Vui lòng nhập đủ thông tin.")
+                }
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- header -->
+        <header>
+            <img src="../img/logo.PNG" alt="">
+        </header>
+        <!-- nav -->
+        <div class="nav">
+            <ul class="nav">
+                <li class="nav-item"><a href="#" class="nav-link">Trang chủ</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" id="btnDK" datatoggle="modal"
+                        data-target="#mymodal">Đăng ký</a></li>
+            </ul>
+        </div>
+        <hr>
+        <div class="section">
+            <div class="title text-center">
+                <h2>List Of Members</h2>
+            </div>
+            <table class="table table-border" id="danhsach">
+                <thead>
+                    <th scope="col">STT</th>
+                    <th scope="col">Ho Ten</th>
+                    <th scope="col">Gioi Tinh</th>
+                    <th scope="col">Ngon Ngu</th>
+                    <th scope="col">So dien thoai</th>
+                    <th scope="col">Ngay sinh</th>
+                    <th scope="col">Dia chi</th>
+                    <th scope="col">Khoa hoc</th>
+                    <th scope="col">Hoc Phi</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <!-- thong tin sv -->
+            <div>
+                MSSV: 22649001_______
+                HO TEN: PHAN QUOC KIET_______
+                LOP: DHHTTT18A_______
+                SO MAY: 10
+            </div>
+        </div>
+    </div>
+</body>
+<!-- modal -->
+<div class="modal fade" id="mymodal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thông tin học viên</h3>
+                <button type="button" class="btn btn-close" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- hoten -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Ho va ten:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" name="" id="txtten" class="form-control">
+                        <span id="tbten"></span>
+                    </div>
+                </div>
+
+                <!-- gioi tinh -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Gioi tinh:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <label for="nam">
+                            <input type="radio" name="gioitinh" class="checkgt" value="Nam">
+                            Nam
+                        </label>
+
+                        <label for="nu" class="ms-3">
+                            <input type="radio" name="gioitinh" class="checkgt" value="Nữ">
+                            Nữ
+                        </label>
+                        <span id="tbgt"></span>
+                    </div>
+                </div>
+
+                <!-- ngon ngu -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Ngon ngu:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <label for="English">
+                            <input type="checkbox" name="ngonngu" class="checknn" value="English">
+                            English
+                        </label>
+
+                        <label for="France" class="ms-3">
+                            <input type="checkbox" name="ngonngu" class="checknn" value="France">
+                            France
+                        </label>
+
+                        <label for="China" class="ms-3">
+                            <input type="checkbox" name="ngonngu" class="checknn" value="China">
+                            China
+                        </label>
+                        <span id="tbnn"></span>
+                    </div>
+                </div>
+
+                <!-- so dien thoai -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">So dien thoai:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" name="" id="txtsdt" class="form-control">
+                        <span id="tbsdt"></span>
+                    </div>
+                </div>
+
+                <!-- ngay sinh -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Ngay sinh:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="date" id="txtngay" class="form-control">
+                        <span id="tbngay"></span>
+                    </div>
+
+                </div>
+
+                <!-- dia chi -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Dia chi:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" name="" id="txtdiachi" class="form-control">
+                        <span id="tbdiachi"></span>
+                    </div>
+
+                </div>
+
+                <!-- khóa hoc -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Bạn muốn tham khảo khoa hoc nào:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <select name="" id="khoahoc" class="form-select">
+                            <option value="5000000">2 tuan</option>
+                            <option value="8000000">4 tuan</option>
+                            <option value="9000000">6 tuan</option>
+                        </select>
+                        <span id="tbkhoahoc"></span>
+                    </div>
+
+                </div>
+
+                <!-- học phí -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Hoc phi:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" name="" id="txthocphi" class="form-control" readonly>
+                    </div>
+                </div>
+                <!-- anh dai dien -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="" class="form-label">Anh dai dien:</label>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="file" name="" id="txtavt" class="form-control">
+                        <span id="tbavt"></span>
+                    </div>
+
+                </div>
+                <!-- Lưu -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-success w-100" id="btnSave">Save</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>
